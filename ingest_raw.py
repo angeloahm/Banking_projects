@@ -29,3 +29,5 @@ def ingest(f_paths):
         long.to_csv('C:/Users/angel/Documents/Economics/Research/Banking Project/data/intermediate/call_reports/' + f_path[-16:-12] + '.csv', index=False)
 
 ingest(f_paths)
+
+# Testing remote access. 
