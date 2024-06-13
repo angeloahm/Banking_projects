@@ -58,4 +58,4 @@ while True:
 sod = pd.DataFrame(all_records)
 
 # Save the data to a CSV file (not in the repository):
-sod.to_csv('c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\data\\intermediate\\sod_data.csv', index=False)
+sod.to_csv('c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\data\\intermediate\\sod\\sod_data.csv', index=False)
