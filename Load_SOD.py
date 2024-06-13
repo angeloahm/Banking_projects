@@ -4,7 +4,9 @@ import requests
 import yaml
 
 # Load the YAML file
-yaml_file_path = 'c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\Banking_projects\\Dictionaries'
+#yaml_file_path = 'c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\Banking_projects\\Dictionaries'
+yaml_file_path = 'C:\\Users\\IRAXA11\\Documents\\Research\\Banking Project\\FDIC Summary of Deposits\\Dictionaries'
+
 
 # Read the 'sod_properties.yaml' file:
 with open(yaml_file_path + '\\sod_properties.yaml', 'r') as file:
@@ -58,4 +60,5 @@ while True:
 sod = pd.DataFrame(all_records)
 
 # Save the data to a CSV file (not in the repository):
-sod.to_csv('c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\data\\intermediate\\sod\\sod_data.csv', index=False)
+#sod.to_csv('c:\\Users\\angel\\Documents\\Economics\\Research\\Banking Project\\data\\intermediate\\sod\\sod_data.csv', index=False)
+sod.to_csv('C:\\Users\\IRAXA11\\Documents\\Research\\Banking Project\\sod_data.csv', index=False)
