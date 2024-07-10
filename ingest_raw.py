@@ -31,8 +31,8 @@ def ingest(f_paths):
         long = pd.merge(long, mdrm_names, left_on='variable', right_on='var_name', how='left')
         
         # Save 'long' data to a csv file in the folder data/intermediate/call_reports:
-        #long.to_csv('C:/Users/angel/Documents/Economics/Research/Banking Project/data/intermediate/call_reports/' + f_path[-16:-4] + '.csv', index=False)
-        long.to_csv('C:/Users/IRAXA11/Documents/Research/Banking Project/Call Reports/' + f_path[-16:-4] + '.csv', index=False)
+        long.to_csv('C:/Users/angel/Documents/Economics/Research/Banking Project/data/intermediate/call_reports/' + f_path[-16:-4] + '.csv', index=False)
+        #long.to_csv('C:/Users/IRAXA11/Documents/Research/Banking Project/Call Reports/' + f_path[-16:-4] + '.csv', index=False)
 
     
 ingest(f_paths)
