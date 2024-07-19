@@ -35,6 +35,7 @@ def ingest(cr_path):
         os.chdir(cr_path + 'FFIEC CDR Call Bulk All Schedules ' + date)
         
         # Load the data
+        rc = pd.read_csv('FFIEC CDR Call Schedule RC '+date+'.txt', sep='\t')
         por = pd.read_csv('FFIEC CDR Call Bulk POR '+date+'.txt', sep='\t')
         rck = pd.read_csv('FFIEC CDR Call Schedule RCK '+date+'.txt', sep='\t')
         ri = pd.read_csv('FFIEC CDR Call Schedule RI '+date+'.txt', sep='\t')
@@ -42,6 +43,7 @@ def ingest(cr_path):
         # Merge the data on 'IDRSSD':
         dt = pd.merge(por, rck, on='IDRSSD')
         dt = pd.merge(dt, ri, on='IDRSSD')
+        dt = pd.merge(dt, rc, on='IDRSSD')
         dt = dt.iloc[:, :-1]            # Drop last column since it is always empty
         dt['Date'] = date
 
