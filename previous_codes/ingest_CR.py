@@ -44,12 +44,12 @@ def ingest(cr_path):
         ri = pd.read_csv('FFIEC CDR Call Schedule RI '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
         
         # Define 'rcl' based on file availability
-        #rcl_files = glob.glob(f'FFIEC CDR Call Schedule RCL {date}*.txt')
+        rco_files = glob.glob(f'FFIEC CDR Call Schedule RCO {date}*.txt')
         
-        #if len(rcl_files) == 1:
-        #    rcl = pd.read_csv(rcl_files[0], sep='\t')
-        #elif len(rcl_files) == 2:
-        #    rcl = pd.read_csv(rcl_files[0], sep='\t')  # Only load '(1 of 2).txt'
+        if len(rco_files) == 1:
+            rco = pd.read_csv(rco_files[0], sep='\t').drop(index=0).reset_index(drop=True)
+        elif len(rco_files) == 2:
+            rco = pd.read_csv(rco_files[0], sep='\t').drop(index=0).reset_index(drop=True)  # Only load '(1 of 2).txt'
 
         # Merge the data on 'IDRSSD':
         dt = pd.merge(rc, rca, on='IDRSSD')
@@ -57,6 +57,7 @@ def ingest(cr_path):
         dt = pd.merge(dt, por, on='IDRSSD')
         dt = pd.merge(dt, rck, on='IDRSSD')
         dt = pd.merge(dt, ri, on='IDRSSD')
+        dt = pd.merge(dt, rco, on='IDRSSD')
         #dt = pd.merge(dt, rcl, on='IDRSSD')
         #dt = dt.iloc[:, :-1]            # Drop last column since it is always empty
         dt['Date'] = date
