@@ -36,11 +36,12 @@ def ingest(cr_path):
         os.chdir(cr_path + 'FFIEC CDR Call Bulk All Schedules ' + date)
         
         # Load the data
-        rc = pd.read_csv('FFIEC CDR Call Schedule RC '+date+'.txt', sep='\t')
-        rce1 = pd.read_csv('FFIEC CDR Call Schedule RCEI '+date+'.txt', sep='\t')
-        por = pd.read_csv('FFIEC CDR Call Bulk POR '+date+'.txt', sep='\t')
-        rck = pd.read_csv('FFIEC CDR Call Schedule RCK '+date+'.txt', sep='\t')
-        ri = pd.read_csv('FFIEC CDR Call Schedule RI '+date+'.txt', sep='\t')
+        rc = pd.read_csv('FFIEC CDR Call Schedule RC '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        rca = pd.read_csv('FFIEC CDR Call Schedule RCA '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        rce1 = pd.read_csv('FFIEC CDR Call Schedule RCEI '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        por = pd.read_csv('FFIEC CDR Call Bulk POR '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        rck = pd.read_csv('FFIEC CDR Call Schedule RCK '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        ri = pd.read_csv('FFIEC CDR Call Schedule RI '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
         
         # Define 'rcl' based on file availability
         #rcl_files = glob.glob(f'FFIEC CDR Call Schedule RCL {date}*.txt')
@@ -51,10 +52,11 @@ def ingest(cr_path):
         #    rcl = pd.read_csv(rcl_files[0], sep='\t')  # Only load '(1 of 2).txt'
 
         # Merge the data on 'IDRSSD':
-        dt = pd.merge(por, rck, on='IDRSSD')
-        dt = pd.merge(dt, ri, on='IDRSSD')
-        dt = pd.merge(dt, rc, on='IDRSSD')
+        dt = pd.merge(rc, rca, on='IDRSSD')
         dt = pd.merge(dt, rce1, on='IDRSSD')
+        dt = pd.merge(dt, por, on='IDRSSD')
+        dt = pd.merge(dt, rck, on='IDRSSD')
+        dt = pd.merge(dt, ri, on='IDRSSD')
         #dt = pd.merge(dt, rcl, on='IDRSSD')
         #dt = dt.iloc[:, :-1]            # Drop last column since it is always empty
         dt['Date'] = date
