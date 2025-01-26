@@ -37,6 +37,7 @@ def ingest(cr_path):
         
         # Load the data
         rc = pd.read_csv('FFIEC CDR Call Schedule RC '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
+        rcci = pd.read_csv('FFIEC CDR Call Schedule RCCI '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
         rca = pd.read_csv('FFIEC CDR Call Schedule RCA '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
         rce1 = pd.read_csv('FFIEC CDR Call Schedule RCEI '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
         por = pd.read_csv('FFIEC CDR Call Bulk POR '+date+'.txt', sep='\t').drop(index=0).reset_index(drop=True)
@@ -64,7 +65,8 @@ def ingest(cr_path):
             rcb = rcb.drop(columns='RCON1773')
 
         # Merge the data on 'IDRSSD':
-        dt = pd.merge(rc, rca, on='IDRSSD')
+        dt = pd.merge(rc, rcci, on='IDRSSD')
+        dt = pd.merge(dt, rca, on='IDRSSD')
         dt = pd.merge(dt, rce1, on='IDRSSD')
         dt = pd.merge(dt, por, on='IDRSSD')
         dt = pd.merge(dt, rck, on='IDRSSD')
