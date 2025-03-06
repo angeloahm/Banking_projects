@@ -50,16 +50,16 @@ This folder hosts all the code necessary for data ingestion, processing, and ini
 ## How to Use 🚀
 
 1. **Data Ingestion:**
-2. - Download the 'Call Reports Single Period' files from: This script downloads the Call Reports Single Period data from [this link](https://cdr.ffiec.gov/public/pws/downloadbulkdata.aspx).
+   - Download the 'Call Reports Single Period' files from: This script downloads the Call Reports Single Period data from [this link](https://cdr.ffiec.gov/public/pws/downloadbulkdata.aspx).
    - Run `ingest_CR.py` to collect Call Reports schedules for your chosen date. 
    - Run `ingest_SOD.py` to collect the Summary of Deposits data.
 
-3. **Data Processing:**
+2. **Data Processing:**
    - Execute `construct_main_df.py` to merge individual CSV files into a single `call_reports.csv`.
    - Open `cr_analysis.ipynb` to process `call_reports.csv`, construct financial variables, and perform a preliminary analysis of Call Reports data.
    - Open `preliminary_SOD.ipynb` for a preliminary analysis of the SOD data.
 
-4. **API Loading (Experimental):**
+3. **API Loading (Experimental):**
    - Use `Load_SOD.py` for testing the API-based approach to load SOD data.
 
 ## Dependencies 📦
