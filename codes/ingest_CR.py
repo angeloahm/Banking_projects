@@ -4,7 +4,7 @@ import glob
 
 # Define the file paths
 mdrm_path = 'C:/Users/angel/Documents/Economics/Research/Banking Project/data/raw/MDRM'
-cr_path = 'C:/Users/angel/Documents/Economics/Research/Banking Project/data/raw/CallReports_SinglePeriod/_extracted/'
+cr_path = 'C:/Users/angel/Documents/Economics/Research/Banking Project/data/raw/FFIEC/_extracted/'
 
 # Define the path to save the data:
 path_save = 'C:/Users/angel/Documents/Economics/Research/Banking Project/data/intermediate/call_reports_SP/'
@@ -24,22 +24,33 @@ mdrm_names = mdrm.groupby(['var_name', 'Item Name']).size().reset_index().drop(c
 # Create function to load schedules dealing quoting issues
 def load_schedule(path):
     try:
-        return pd.read_csv(
+        df = pd.read_csv(
             path,
-            sep='\t'
+            sep='\t',
+            low_memory=False,
         ).drop(index=0).reset_index(drop=True)
+        df['IDRSSD'] = (
+                        pd.to_numeric(df['IDRSSD'], errors='coerce')   # turns bad strings into NaN
+                        .astype('Int64')                             # keeps missing as <NA>
+                        )
+        return df
     except pd.errors.ParserError as err:
         print(f'ParserError in {path} -> {err}')
         # In this case, use csv.QUOTE_NONE
         df = pd.read_csv(
             path,
             sep='\t',
-            quoting=csv.QUOTE_NONE
+            quoting=csv.QUOTE_NONE,
+            low_memory=False,
         ).drop(index=0).reset_index(drop=True)
         # remove quotes from df:
         df = df.replace({'"': ''}, regex=True)
         # remove quotes from column names:
         df.columns = df.columns.str.replace('"', '', regex=False)
+        df['IDRSSD'] = (
+                        pd.to_numeric(df['IDRSSD'], errors='coerce')   # turns bad strings into NaN
+                        .astype('Int64')                             # keeps missing as <NA>
+                        )
         return df
 
 
@@ -69,10 +80,10 @@ def ingest(cr_path):
 
         # Define 'rcl' based on file availability
         rco_files = glob.glob(f'FFIEC CDR Call Schedule RCO {date}*.txt')
-        rco = pd.read_csv(rco_files[0], sep='\t').drop(index=0, errors='ignore').reset_index(drop=True)
+        rco = load_schedule(rco_files[0])
         # Define 'rcl' based on file availability
         rcb_files = glob.glob(f'FFIEC CDR Call Schedule RCB {date}*.txt')
-        rcb = pd.read_csv(rcb_files[0], sep='\t')
+        rcb = load_schedule(rcb_files[0])
         # drop 'RCON1773' column if it exists:
         if 'RCON1773' in rcb.columns:
             rcb = rcb.drop(columns='RCON1773')
@@ -81,7 +92,7 @@ def ingest(cr_path):
         # Merge the data on 'IDRSSD':
         dt = pd.merge(rc, rcci, on='IDRSSD')
         dt = pd.merge(dt, rca, on='IDRSSD')
-        #dt = pd.merge(dt, rcg, on='IDRSSD')
+        dt = pd.merge(dt, rcg, on='IDRSSD')
         dt = pd.merge(dt, rce1, on='IDRSSD')
         dt = pd.merge(dt, por, on='IDRSSD')
         dt = pd.merge(dt, rck, on='IDRSSD')
