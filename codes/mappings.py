@@ -20,6 +20,13 @@ mappings = [
         "method": "secondary",   # Since both are the same, this simply copies RCON2170.
         "mask_zeros": True
     },
+    # Create 'QA Total Assets' from RCON3368 and RCFD3368:
+    {
+        "first_col": "RCFD3368",
+        "second_col": "RCON3368",
+        "new_var": "QA Total Assets",
+        "method": "secondary",   # Since both are the same, this simply copies RCON3368.
+    },
     # Equity Capital: Create Total Equity Capital from RCON3210 and RCFD3210 and mask zeros.
     {
         "first_col": "RCON3210",
@@ -237,5 +244,54 @@ mappings = [
         "first_col_post":   "RIADHK03",      # interest on TDs ≤ $250k
         "second_col_post":  "RIADHK04",      # interest on TDs  > $250k
         "method":           "sum"            # add the two buckets each quarter
-    }
+    },
+    # Create 'Total Interest Expenses' from RIAD4073:
+    {
+        "new_var":          "Total Interest Expenses",
+        "first_col":        "RIAD4073",
+        "second_col":       "RIAD4073",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Interest Expenses on Subordinated Debt' from RIAD4200:
+    {
+        "new_var":          "Interest Expenses on Subordinated Debt",
+        "first_col":        "RIAD4200",
+        "second_col":       "RIAD4200",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Other Interest Expenses' from RIAD4185:
+    {
+        "new_var":          "Other Interest Expenses",
+        "first_col":        "RIAD4185",
+        "second_col":       "RIAD4185",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Interest Expenses on FFS' from RIAD4180:
+    {
+        "new_var":          "Interest Expenses on FFS",
+        "first_col":        "RIAD4180",
+        "second_col":       "RIAD4180",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Interest Expenses on Foreign Deposits' from RIAD4172:
+    {
+        "new_var":          "Interest Expenses on Foreign Deposits",
+        "first_col":        "RIAD4172",
+        "second_col":       "RIAD4172",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Total Interest Income' from RIAD4107:
+    {
+        "new_var":          "Total Interest Income",
+        "first_col":        "RIAD4107",
+        "second_col":       "RIAD4107",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    }, 
+    # Create 'Net Interest Income' from RIAD4340:
+    {
+        "new_var":          "Net Interest Income",
+        "first_col":        "RIAD4340",
+        "second_col":       "RIAD4340",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
 ] 
