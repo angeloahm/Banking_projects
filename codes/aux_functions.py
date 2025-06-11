@@ -25,64 +25,103 @@ def plot_with_range(ax, data, col, line_color):
     ax.tick_params(axis='x', rotation=45)
     return ax
 
-def binned_scatter(x, y, q, marker='o', dispersion=False, label=None):
-    # Convert x to a pandas Series if needed
+def binned_scatter(
+    x,
+    y,
+    q,
+    marker="o",
+    dispersion=False,
+    label=None,
+    color='navy',
+    x_axis="rank",     # "rank"  → percentile ranks    (default, original behaviour)
+                       # "value" → actual x-values
+):
+    """
+    Scatter the mean of *y* in q-quantile bins of *x*.
+
+    Parameters
+    ----------
+    x, y : array-like or pd.Series
+    q    : int
+        Number of equal-frequency bins.
+    marker : str
+        Matplotlib marker for the mean dots.
+    dispersion : bool
+        If True, also plot the median and IQR of *y* in each bin.
+    label : str | None
+        Legend label for the mean dots.
+    x_axis : {"rank", "value"}
+        What to place on the x-axis:
+        - "rank"  → percentile ranks of *x* (0–1).
+        - "value" → the underlying *x* (in data units).
+    """
+
+    # -- ensure pandas Series -------------------------------------------------
     if not isinstance(x, pd.Series):
-        x = pd.Series(x)
-    # Compute percentile rank for each observation (values between 0 and 1)
-    x_pct = x.rank(method='average', pct=True)
-    
-    # Create quantile bins on the percentile ranks
-    x_binned, bin_edges = pd.qcut(x_pct, q=q, retbins=True, duplicates='drop')
-    bin_centers = []
-    binned_means = []
-    binned_median = []
-    binned_min = []
-    binned_max = []
-    
-    # Compute statistics within each bin (using the percentile x-values)
+        x = pd.Series(x, name=getattr(x, "name", None))
+    if not isinstance(y, pd.Series):
+        y = pd.Series(y, name=getattr(y, "name", None))
+
+    # -- percentile ranks & bin membership -----------------------------------
+    x_pct = x.rank(method="average", pct=True)
+    x_binned = pd.qcut(x_pct, q=q, duplicates="drop")
+
+    # -- within-bin statistics ------------------------------------------------
+    bin_centers, means, medians, mins, maxs = [], [], [], [], []
+
     for interval in x_binned.unique():
-        x_in_bin = x_pct[x_binned == interval]
-        y_in_bin = y[x_binned == interval]
-        bin_center = x_in_bin.mean()
-        mean_val = y_in_bin.mean()
-        median_val = y_in_bin.median()
-        # Dispersion: 25th and 75th percentiles of y
-        min_val = y_in_bin.quantile(0.25)
-        max_val = y_in_bin.quantile(0.75)
+        mask = x_binned == interval
+        # centre depends on the chosen x-axis
+        if x_axis == "rank":
+            bin_center = x_pct[mask].mean()
+        elif x_axis == "value":
+            bin_center = x[mask].mean()
+        else:
+            raise ValueError("x_axis must be 'rank' or 'value'.")
+
+        ys = y[mask]
         bin_centers.append(bin_center)
-        binned_means.append(mean_val)
-        binned_median.append(median_val)
-        binned_min.append(min_val)
-        binned_max.append(max_val)
-    
-    # Sort results by bin centers
-    sorted_indices = np.argsort(bin_centers)
-    bin_centers = np.array(bin_centers)[sorted_indices]
-    binned_means = np.array(binned_means)[sorted_indices]
-    binned_median = np.array(binned_median)[sorted_indices]
-    binned_min = np.array(binned_min)[sorted_indices]
-    binned_max = np.array(binned_max)[sorted_indices]
-    
-    # Plot the mean values
-    plt.scatter(bin_centers, binned_means, marker=marker, alpha=1, s=50, edgecolors='black', label=label)
-    
-    # Optionally plot additional dispersion markers
+        means.append(ys.mean())
+        medians.append(ys.median())
+        mins.append(ys.quantile(0.25))
+        maxs.append(ys.quantile(0.75))
+
+    # -- sort by x ------------------------------------------------------------
+    order = np.argsort(bin_centers)
+    bin_centers = np.array(bin_centers)[order]
+    means       = np.array(means)[order]
+    medians     = np.array(medians)[order]
+    mins        = np.array(mins)[order]
+    maxs        = np.array(maxs)[order]
+
+    # -- plot -----------------------------------------------------------------
+    plt.scatter(
+        bin_centers,
+        means,
+        marker=marker,
+        alpha=1,
+        s=50,
+        edgecolors="black",
+        color=color,
+        label=label,
+    )
+
     if dispersion:
-        plt.scatter(bin_centers, binned_median, marker=marker, alpha=0.7, s=50, color='green')
-        plt.scatter(bin_centers, binned_min, marker=marker, alpha=0.7, s=50, color='grey')
-        plt.scatter(bin_centers, binned_max, marker=marker, alpha=0.7, s=50, color='grey')
-    
-    # Label the axes
-    xlabel = f'Percentile Rank of {x.name}' if x.name else 'Percentile Rank'
-    plt.xlabel(xlabel)
-    plt.ylabel(y.name if hasattr(y, 'name') else 'y')
-    plt.grid(True, linestyle='--', alpha=0.5, linewidth=0.5, color='lightgrey')
-    
-    # Set x-ticks from 0 to 100
-    tick_positions = np.linspace(0, 1, 6)
-    tick_labels = [f'{int(val*100)}' for val in tick_positions]
-    plt.xticks(tick_positions, tick_labels)
+        plt.scatter(bin_centers, medians, marker=marker, s=50, alpha=0.7, color="green")
+        plt.scatter(bin_centers, mins,    marker=marker, s=50, alpha=0.7, color="grey")
+        plt.scatter(bin_centers, maxs,    marker=marker, s=50, alpha=0.7, color="grey")
+
+    # -- labels & grid --------------------------------------------------------
+    if x_axis == "rank":
+        plt.xlabel(f"Percentile Rank of {x.name or 'x'}")
+        ticks = np.linspace(0, 1, 6)
+        plt.xticks(ticks, [f"{int(t*100)}" for t in ticks])
+    else:  # actual values
+        plt.xlabel(x.name or "x")
+
+    plt.ylabel(y.name or "y")
+    plt.grid(True, linestyle="--", alpha=0.5, linewidth=0.5, color="lightgrey")
+
 
 
 def lorenz_points(series):
