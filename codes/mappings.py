@@ -152,12 +152,27 @@ mappings = [
     },
     # Create 'Cash' from 0081_right and 0071_right:
     {
-        "new_var":          "Cash",
+        "new_var":          "Cash 2",
         "first_col":        "0081_right",
         "second_col":       "0071_right",
         "method":           "sum",
         "mask_zeros":       True
     },
+    # Create 'Cash 1' from RCON0010 and RCFD0010:
+    {
+        "new_var":          "Cash 1",
+        "first_col":        "RCON0010",
+        "second_col":       "RCFD0010",
+        "method":           "first",
+    },
+    # Create 'Cash' from Cash 1 and Cash 2:
+    {
+        "new_var":          "Cash",
+        "first_col":        "Cash 1",
+        "second_col":       "Cash 2",
+        "method":           "first",
+    },
+    
     # ********************************************************************************************************
     # *********************************************** Deposits ***********************************************
     # ********************************************************************************************************
