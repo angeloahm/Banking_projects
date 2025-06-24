@@ -237,28 +237,43 @@ mappings = [
         "new_var":          "Transaction Deposit Expenses",
         "first_col":        "RIAD4508",
         "second_col":       "RIAD4508",  # Since both are the same, this simply copies RCON2215.
-        "method":           "secondary",
-        "mask_zeros":       True
+        "method":           "secondary"
     },
     # Create 'Savings Expenses' fro RIAD0093:
     {
         "new_var":          "Savings Expenses",
         "first_col":        "RIAD0093",
         "second_col":       "RIAD0093",  # Since both are the same, this simply copies RCON2215.
-        "method":           "secondary",
-        "mask_zeros":       True
+        "method":           "secondary"
     },
-    # Create 'Time Deposit Expenses' from RIADA517 and RIADA518 (pre-2017) or RIADHK03 and RIADHK04 (post-2017):
+    # Create 'Small TD Expense' from RIADA518:
+    # Note: This is a special case where the column is used both before and after the
+    {
+        "new_var":        "Small TD Expense",
+        "first_col":      "RIADA518",          # < $100 k (old code)
+        "second_col":     "RIADA518",          # same column, makes 'secondary' a copy
+        "switch_date":    "2017-03-31",        # first quarter with HK-codes
+        "first_col_post": "RIADHK03",          # ≤ $250 k
+        "second_col_post":"RIADHK03",
+        "method":         "secondary",
+    },
+    # Create 'Large TD Expense' from RIADA517:
+    # Note: This is a special case where the column is used both before and after the
+    {
+        "new_var":        "Large TD Expense",
+        "first_col":      "RIADA517",          # ≥ $100 k (old code)
+        "second_col":     "RIADA517",
+        "switch_date":    "2017-03-31",
+        "first_col_post": "RIADHK04",          # > $250 k
+        "second_col_post":"RIADHK04",
+        "method":         "secondary",
+    },
+    # Create 'Time Deposit Expenses' from 'Small TD Expense' and 'Large TD Expense':
     {
         "new_var":          "Time Deposit Expenses",
-        # pre-2017 codes (FDIC cap = $100k)
-        "first_col":        "RIADA518",      # interest on TDs < $100k
-        "second_col":       "RIADA517",      # interest on TDs ≥ $100k
-        # post-2017 codes (FDIC cap = $250k)
-        "switch_date":      "2017-03-31",    # first quarter with HK-codes
-        "first_col_post":   "RIADHK03",      # interest on TDs ≤ $250k
-        "second_col_post":  "RIADHK04",      # interest on TDs  > $250k
-        "method":           "sum"            # add the two buckets each quarter
+        "first_col":        "Small TD Expense",
+        "second_col":       "Large TD Expense",
+        "method":           "sum",
     },
     # Create 'Total Interest Expenses' from RIAD4073:
     {
