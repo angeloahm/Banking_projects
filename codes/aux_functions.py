@@ -129,3 +129,21 @@ def lorenz_points(series):
     cum_val  = np.cumsum(s) / s.sum()          # cumulative share of variable
     cum_bank = np.arange(1, len(s)+1) / len(s) # cumulative share of banks
     return cum_bank, cum_val
+
+
+
+def interp_row(row: pd.Series, mids_array: np.ndarray) -> np.ndarray:
+    """
+    Interpolates one quarter's Treasury curve to the requested mid-points.
+    Uses straight-line (piece-wise linear) interpolation.
+    Returns NaNs if fewer than two valid curve points are available.
+    """
+    mask = row.notna()
+    xp   = row.index.values[mask].astype(float)
+    fp   = row.values[mask].astype(float)
+
+    if xp.size < 2:
+        return np.full_like(mids_array, np.nan, dtype=float)
+
+    # numpy.interp = plain linear interpolation
+    return np.interp(mids_array, xp, fp)

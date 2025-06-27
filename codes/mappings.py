@@ -324,4 +324,167 @@ mappings = [
         "second_col":       "RIAD4340",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
+    # Create Non Interest Income from RIAD4093:
+    {
+        "new_var":          "Non Interest Expenses",
+        "first_col":        "RIAD4093",
+        "second_col":       "RIAD4093",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # ********************************************************************************************************
+    # *********************************************** Maturity ***********************************************
+    # ********************************************************************************************************
+    # Treasuries:
+    {
+        "first_col": "RCFDA549",
+        "second_col": "RCONA549",
+        "new_var": "Treasuries (3M-)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA550",
+        "second_col": "RCONA550",
+        "new_var": "Treasuries (3M-1Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA551",
+        "second_col": "RCONA551",
+        "new_var": "Treasuries (1Y-3Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA552",
+        "second_col": "RCONA552",
+        "new_var": "Treasuries (3Y-5Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA553",
+        "second_col": "RCONA553",
+        "new_var": "Treasuries (5Y-15Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA554",
+        "second_col": "RCONA554",
+        "new_var": "Treasuries (15Y+)",
+        "method": "secondary"
+    },
+    # MBS:
+    {
+        "first_col": "RCFDA555",
+        "second_col": "RCONA555",
+        "new_var": "MBS (3M-)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA556",
+        "second_col": "RCONA556",
+        "new_var": "MBS (3M-1Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA557",
+        "second_col": "RCONA557",
+        "new_var": "MBS (1Y-3Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA558",
+        "second_col": "RCONA558",
+        "new_var": "MBS (3Y-5Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA559",
+        "second_col": "RCONA559",
+        "new_var": "MBS (5Y-15Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA560",
+        "second_col": "RCONA560",
+        "new_var": "MBS (15Y+)",
+        "method": "secondary"
+    },
+    # Overall Securities (as the sum of Treasuries and MBS for each bucket):
+    {
+        "first_col": "Treasuries (3M-)",
+        "second_col": "MBS (3M-)",
+        "new_var": "Securities (3M-)",
+        "method": "sum"
+    },
+    {
+        "first_col": "Treasuries (3M-1Y)",
+        "second_col": "MBS (3M-1Y)",
+        "new_var": "Securities (3M-1Y)",
+        "method": "sum"
+    },
+    {
+        "first_col": "Treasuries (1Y-3Y)",
+        "second_col": "MBS (1Y-3Y)",
+        "new_var": "Securities (1Y-3Y)",
+        "method": "sum"
+    },
+    {
+        "first_col": "Treasuries (3Y-5Y)",
+        "second_col": "MBS (3Y-5Y)",
+        "new_var": "Securities (3Y-5Y)",
+        "method": "sum"
+    },
+    {
+        "first_col": "Treasuries (5Y-15Y)",
+        "second_col": "MBS (5Y-15Y)",
+        "new_var": "Securities (5Y-15Y)",
+        "method": "sum"
+    },
+    {
+        "first_col": "Treasuries (15Y+)",
+        "second_col": "MBS (15Y+)",
+        "new_var": "Securities (15Y+)",
+        "method": "sum"
+    },
+    # Overall Loans:
+    {
+        "first_col": "RCFDA570",
+        "second_col": "RCONA564",
+        "new_var": "Loans (3M-)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA571",
+        "second_col": "RCONA565",
+        "new_var": "Loans (3M-1Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA572",
+        "second_col": "RCONA566",
+        "new_var": "Loans (1Y-3Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA573",
+        "second_col": "RCONA567",
+        "new_var": "Loans (3Y-5Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA574",
+        "second_col": "RCONA568",
+        "new_var": "Loans (5Y-15Y)",
+        "method": "secondary"
+    },
+    {
+        "first_col": "RCFDA575",
+        "second_col": "RCONA569",
+        "new_var": "Loans (15Y+)",
+        "method": "secondary"
+    }
+
 ] 
+
+
+
+
