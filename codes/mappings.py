@@ -41,6 +41,13 @@ mappings = [
         "new_var": "AOCI",
         "method": "secondary",   # Since both are the same, this simply copies RCONB530.
     },
+    # Total Liabilities:
+    {
+        "first_col": "RCON2948",
+        "second_col": "RCFD2948",
+        "new_var": "Total Liabilities",
+        "method": "secondary",
+    },
     # ********************************************************************************************************
     # ****************************************** Security Variables ******************************************
     # ********************************************************************************************************
