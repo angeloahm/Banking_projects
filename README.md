@@ -128,7 +128,7 @@ print("Rows with mismatches per code:", report)
 pair = ("RCFD1400", "RCON1400")                      # Fed Funds purchased
 cr.select_variables(list(pair))
 mappings = [{
-    "new_var": "fedfunds_clean",
+    "new_var": "Loans",
     "first_col": pair[0],          # Fallback
     "second_col": pair[1],         # Priority
     "method": "secondary"          # Use second if present, else first
