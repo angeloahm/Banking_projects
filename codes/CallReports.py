@@ -29,9 +29,10 @@ class CallReports:
     def select_variables(self, variables=None):
         """
         Select a subset of columns for analysis and load only those columns from the CSV file.
+        We do not want to load all columns from the CSV file, as it is too large.
         Essential variables are always included.
-        
-        Also, check for duplicate columns that come in pairs ending with '_x' and '_y'. For each pair,
+
+        We start by checking for duplicate columns that come in pairs ending with '_x' and '_y'. For each pair,
         compute the maximum gap (absolute difference) between the entries. The maximum gap is printed,
         and if the gap is zero, the '_y' column is dropped (keeping the '_x' column).
         
@@ -160,50 +161,75 @@ class CallReports:
             DataFrame with constructed variables appended.
             
         -------------------------------------- Examples --------------------------------------
-        1) For a variable that changes MDRM codes, we use the 'switch_date' to determine when to switch columns.
-        Suppose the variable "Held-to-maturity securities" changes MDRM codes on 2019-03-31:        
-            mappings = [
-                {
-                    "new_var": "Held-to-maturity securities",
-                    "first_col": "RCFD1754",
-                    "second_col": "RCON1754",
-                    "switch_date": "2019-03-31",
-                    "first_col_post": "RCFDJJ34",
-                    "second_col_post": "RCONJJ34",
-                    "method": "secondary",
-                    "mask_zeros": True
-                }
-            ]
-        
-        Then, the resulting series is constructed as:
-        
-            Date          Columns used
-            -------------------------------------
-            2018-12-31 → RCFD1754 & RCON1754
-            2019-03-30 → RCFD1754 & RCON1754
-            ------------------------------------- switch_date = 2019-03-31
-            2019-03-31 → RCFDJJ34 & RCONJJ34
-            2020-06-30 → RCFDJJ34 & RCONJJ34
-        
-        For a variable without code changes, such as "Total Loans":
-        
-            mappings = [
-                {
-                    "new_var": "Total Loans",
-                    "first_col": "RCON2122",
-                    "second_col": "RCON2122",
-                    "method": "secondary",
-                    "mask_zeros": True
-                }
-            ]
-        
-        The resulting series uses the same columns across all dates:
-        
-            Date          Columns used
-            -------------------------------------
-            2005-12-31 → RCON2122
-            2019-03-31 → RCON2122
-            2023-12-31 → RCON2122
+        1) **Variable that changes MDRM codes** – handled with ``switch_date``
+           Suppose the variable "Held-to-maturity securities" switches MDRM codes on *2019‑03‑31*:
+               mappings = [
+                   {
+                       "new_var": "Held-to-maturity securities",
+                       "first_col": "RCFD1754",
+                       "second_col": "RCON1754",
+                       "switch_date": "2019-03-31",
+                       "first_col_post": "RCFDJJ34",
+                       "second_col_post": "RCONJJ34",
+                       "method": "secondary",
+                       "mask_zeros": True
+                   }
+               ]
+
+           The resulting series is constructed as:
+
+               ┌────────────┬────────────────────────────────────────┐
+               │ Date       │ Columns used                          │
+               ├────────────┼────────────────────────────────────────┤
+               │ 2018‑12‑31 │ RCFD1754   & RCON1754                 │
+               │ 2019‑03‑30 │ RCFD1754   & RCON1754                 │
+               │ 2019‑03‑31 │ RCFDJJ34   & RCONJJ34   ← *switch*    │
+               │ 2020‑06‑30 │ RCFDJJ34   & RCONJJ34                 │
+               └────────────┴────────────────────────────────────────┘
+
+        2) **'secondary' method** – *take the second column if available, otherwise fall back to the first.*
+
+           .. code-block:: python
+
+               # Mapping
+               {
+                   "new_var": "Total Equity Capital",
+                   "first_col": "RCFD3210",  # fallback if priority column is NaN
+                   "second_col": "RCON3210", # *priority* column
+                   "method": "secondary"
+               }
+
+           Row‑wise behaviour:
+
+           ==============================  =================  =================  =================
+           RCFD3210 (col1)                RCON3210 (col2)    Returned value     Explanation
+           ==============================  =================  =================  =================
+           1 000                          1 200              1 200              col2 present → use it
+           1 000                          NaN                1 000              col2 missing → fallback
+           NaN                            NaN                NaN                both missing
+           ==============================  =================  =================  =================
+
+        3) **'sum' method** – *numeric addition, treating NaNs as zero.*
+
+           .. code-block:: python
+
+               {
+                   "new_var": "Securities AC",    # amortised‑cost securities
+                   "first_col": "HTM_Securities", # e.g. held‑to‑maturity (col1)
+                   "second_col": "AFS_Securities",# available‑for‑sale (col2)
+                   "method": "sum"
+               }
+
+           Row‑wise behaviour:
+
+           ==================  =================  =================  =================
+           HTM (col1)          AFS (col2)         Returned value     Explanation
+           ==================  =================  =================  =================
+           500                 300                800                500 + 300
+           NaN                 300                300                treat NaN→0, 0+300
+           500                 NaN                500                500+0
+           NaN                 NaN                0                  both NaN→0+0
+           ==================  =================  =================  =================
         """
         if self.df_selected is None:
             raise ValueError("Please run select_variables() first.")
@@ -225,7 +251,7 @@ class CallReports:
             
             pre_mask = df['Date'] < switch_date
             
-            # Function to combine two columns
+            # Function to combine two columns according to the method specified in the mapping.
             def combine_cols(df_slice, col1, col2, method):
                 if method == "min":
                     return df_slice[[col1, col2]].min(axis=1)
