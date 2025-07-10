@@ -1,5 +1,3 @@
-Add to the following some examples on how to use 'compare_variables', explain the most important modules with a bit more details:
-
 # 🏦 Banking Projects Repository
 
 ## Overview ✨
