@@ -331,11 +331,26 @@ mappings = [
         "second_col":       "RIAD4340",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
-    # Create Non Interest Expenses from RIAD4093:
+    # --------------------------------------------- Non Interest Stuff ---------------------------------------------
+    # Create 'Salaries' from RIAD4135:
     {
-        "new_var":          "Non Interest Expenses",
-        "first_col":        "RIAD4093",
-        "second_col":       "RIAD4093",  # Since both are the same, this simply copies RCON2215.
+        "new_var":          "Salaries",
+        "first_col":        "RIAD4135",
+        "second_col":       "RIAD4135",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Fixed Asset Expenses' from RIAD4217:
+    {
+        "new_var":          "Fixed Asset Expenses",
+        "first_col":        "RIAD4217",
+        "second_col":       "RIAD4217",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Other Non Interest Expenses' from RIAD4092:
+    {
+        "new_var":          "Other Non Interest Expenses",
+        "first_col":        "RIAD4092",
+        "second_col":       "RIAD4092",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
     # Create Service Charges from Deposits from RIAD4080:
@@ -345,32 +360,18 @@ mappings = [
         "second_col":       "RIAD4080",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
-    # Create 'Income from Fiduciary Activities' from RIAD4070:
-    {
-        "new_var":          "Income from Fiduciary Activities",
-        "first_col":        "RIAD4070",
-        "second_col":       "RIAD4070",  # Since both are the same, this simply copies RCON2215.
-        "method":           "secondary",
-    },
-    # Create 'Net Servicing Fees' from RIADB492:
-    {
-        "new_var":          "Net Servicing Fees",
-        "first_col":        "RIADB492",
-        "second_col":       "RIADB492",  # Since both are the same, this simply copies RCON2215.
-        "method":           "secondary",
-    },
-    # Create 'Other Non Interest Income' summing Service Charges from Deposits and Net Servicing Fees:
+    # Create 'Other Non Interest Income' from RIADB492:
     {
         "new_var":          "Other Non Interest Income",
         "first_col":        "RIADB497",
-        "second_col":       "RIADB497",
+        "second_col":       "RIADB497",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
-    # Create 'Non Interest Income' from RIAD4079:
+    # Create 'Non Interest Expenses' from RIAD4093:
     {
-        "new_var":          "Non Interest Income",
-        "first_col":        "RIAD4079",
-        "second_col":       "RIAD4079",
+        "new_var":          "Non Interest Expenses",
+        "first_col":        "RIAD4093",
+        "second_col":       "RIAD4093",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
     # ********************************************************************************************************
