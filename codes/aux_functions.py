@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from textwrap import dedent
 
 # Helper function to plot mean with min/max shading.
 def plot_with_range(ax, data, col, line_color):
@@ -147,3 +148,8 @@ def interp_row(row: pd.Series, mids_array: np.ndarray) -> np.ndarray:
 
     # numpy.interp = plain linear interpolation
     return np.interp(mids_array, xp, fp)
+
+def coef_line(param, res):
+    coef, se, p = res.params[param], res.std_errors[param], res.pvalues[param]
+    star = '^{***}' if p < .01 else ('^{**}' if p < .05 else ('^{*}' if p < .10 else ''))
+    return f"${coef:.3f}{star}$", f"$({se:.3f})$"
