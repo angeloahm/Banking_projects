@@ -237,7 +237,7 @@ mappings = [
         "mask_zeros":       True
     },
     # ********************************************************************************************************
-    # ****************************************** Interest Expenses *******************************************
+    # ****************************************** Income Variables *******************************************
     # ********************************************************************************************************
     # Create 'Transaction Deposit Expenses' from RIAD4508:
     {
@@ -331,6 +331,27 @@ mappings = [
         "second_col":       "RIAD4340",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
+    # Create 'Loan Interest Income' from RIAD4010:
+    {
+        "new_var":          "Loan Interest Income",
+        "first_col":        "RIAD4010",
+        "second_col":       "RIAD4010",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Interest Income on Leases' from RIAD4065:
+    {
+        "new_var":          "Leases Interest Income",
+        "first_col":        "RIAD4065",
+        "second_col":       "RIAD4065",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Interest Income from Loans and Leases' from Loan Interest Income and Interest Income on Leases:
+    {
+        "new_var":          "Loans and Leases Interest Income",
+        "first_col":        "Loan Interest Income",
+        "second_col":       "Leases Interest Income",
+        "method":           "sum",
+    },    
     # --------------------------------------------- Non Interest Stuff ---------------------------------------------
     # Create 'Salaries' from RIAD4135:
     {
@@ -372,6 +393,21 @@ mappings = [
         "new_var":          "Non Interest Expenses",
         "first_col":        "RIAD4093",
         "second_col":       "RIAD4093",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # ------------------------------------------------ Adjusting for Default ---------------------------------------------
+    # Create 'Charge Off Loans' from RIAD4635:
+    {
+        "new_var":          "Charge Off Loans",
+        "first_col":        "RIAD4635",
+        "second_col":       "RIAD4635",  # Since both are the same, this simply copies RCON2215.
+        "method":           "secondary",
+    },
+    # Create 'Recovery Loans' from RIAD4605:
+    {
+        "new_var":          "Recovery Loans",
+        "first_col":        "RIAD4605",
+        "second_col":       "RIAD4605",  # Since both are the same, this simply copies RCON2215.
         "method":           "secondary",
     },
     # ********************************************************************************************************

@@ -76,7 +76,7 @@ def ingest(cr_path):
         por  = load_schedule(f'FFIEC CDR Call Bulk POR {date}.txt')
         rck  = load_schedule(f'FFIEC CDR Call Schedule RCK {date}.txt')
         ri   = load_schedule(f'FFIEC CDR Call Schedule RI {date}.txt')
-        
+        ribi = load_schedule(f'FFIEC CDR Call Schedule RIBI {date}.txt')
 
         # Define 'rcl' based on file availability
         rco_files = glob.glob(f'FFIEC CDR Call Schedule RCO {date}*.txt')
@@ -97,6 +97,7 @@ def ingest(cr_path):
         dt = pd.merge(dt, por, on='IDRSSD')
         dt = pd.merge(dt, rck, on='IDRSSD')
         dt = pd.merge(dt, ri, on='IDRSSD')
+        dt = pd.merge(dt, ribi, on='IDRSSD')
         dt = pd.merge(dt, rco, on='IDRSSD')
         dt = pd.merge(dt, rcb, on='IDRSSD')
         #dt = pd.merge(dt, rcl, on='IDRSSD')
